@@ -45,8 +45,8 @@ export default function ProjectCard({ project, index }: Props) {
     const xPct = mouseX / width - 0.5;
     const yPct = mouseY / height - 0.5;
     
-    x.set(xPct * 15); // max 15deg rotation
-    y.set(yPct * -15);
+    x.set(xPct * 6); // gentle tilt — was 15deg, too aggressive
+    y.set(yPct * -6);
   };
 
   const handleMouseLeave = () => {
@@ -95,23 +95,23 @@ export default function ProjectCard({ project, index }: Props) {
         </div>
 
         {/* Body */}
-        <div className="flex flex-col flex-1 p-6 sm:p-8 relative z-10">
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-zinc-400 transition-all">
+        <div className="flex flex-col flex-1 p-6 sm:p-7 relative z-10">
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <h3 className="text-lg sm:text-xl font-bold text-white transition-colors duration-300 group-hover:text-purple-200">
               {project.title}
             </h3>
             <span
-              className={`shrink-0 px-3 py-1 rounded-full text-[10px] font-mono border ${isCompleted ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-orange-500/10 border-orange-500/20 text-orange-400"}`}
+              className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-mono border whitespace-nowrap ${isCompleted ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-orange-500/10 border-orange-500/20 text-orange-400"}`}
             >
               {project.status}
             </span>
           </div>
 
-          <p className="text-sm text-zinc-400 leading-relaxed flex-1 mb-6">
+          <p className="text-sm text-zinc-400 leading-relaxed flex-1 mb-5">
             {project.description}
           </p>
 
-          <div className="flex flex-wrap gap-2 mb-8">
+          <div className="flex flex-wrap gap-2 mb-6">
             {project.tech.map((t) => {
               const c = chipStyle(t);
               return (

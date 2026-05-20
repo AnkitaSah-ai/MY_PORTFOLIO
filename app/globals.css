@@ -50,7 +50,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-outfit), sans-serif;
-  line-height: 1.1;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
@@ -113,6 +113,10 @@ img, svg, video, canvas {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: gradient-shift 6s ease infinite;
+  /* Prevent descender clipping from tight line-heights */
+  padding-bottom: 0.12em;
+  display: inline-block;
+  line-height: 1.15;
 }
 
 .glass {

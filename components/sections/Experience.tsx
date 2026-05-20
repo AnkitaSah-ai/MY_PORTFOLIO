@@ -66,26 +66,26 @@ export default function Experience() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
-                  className={`w-full md:w-[45%] glass-panel p-6 sm:p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 ml-6 md:ml-0`}
+                  className={`w-full md:w-[45%] glass-panel p-6 sm:p-8 rounded-3xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 ml-6 md:ml-0 overflow-hidden`}
                 >
                   <span className="inline-block px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-mono mb-4">
                     {entry.year}
                   </span>
-                  
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-2 wrap-break-word">
                     {entry.institution}
                   </h3>
-                  
-                  <h4 className="text-sm sm:text-base font-semibold text-zinc-300 mb-4">
+
+                  <h4 className="text-sm sm:text-base font-semibold text-zinc-300 mb-4 wrap-break-word">
                     {entry.degree} — {entry.course}
                   </h4>
-                  
-                  <p className="text-sm text-zinc-500 leading-relaxed mb-4">
+
+                  <p className="text-sm text-zinc-500 leading-relaxed mb-4 wrap-break-word">
                     {entry.description}
                   </p>
 
-                  <div className="flex items-center gap-2 text-xs font-mono text-zinc-600">
-                    <span>📍</span> {entry.location}
+                  <div className="flex items-center gap-2 text-xs font-mono text-zinc-600 wrap-break-word">
+                    <span aria-hidden="true">📍</span> {entry.location}
                   </div>
                 </motion.div>
               </div>

@@ -59,26 +59,26 @@ export default function About() {
           {/* Bio Content - Right side on Desktop */}
           <div className="lg:col-span-7 flex flex-col gap-8 lg:mt-24">
             <motion.div {...fadeUp(0.3)} className="glass-panel p-8 sm:p-10 rounded-3xl border border-white/5 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              
-              <p className="text-lg sm:text-xl md:text-2xl leading-relaxed text-zinc-300 font-medium mb-6 relative z-10">
-                I'm <span className="text-white">Ankita Sah</span>, a Full Stack Developer and Generative AI enthusiast currently pursuing my MDC at Surya Sen Mahavidyalaya.
-              </p>
-              
-              <p className="text-base sm:text-lg text-zinc-500 leading-relaxed mb-8 relative z-10">
-                My journey bridges the gap between intricate backend logic and stunning, fluid user interfaces. I believe the best products don't just function—they feel alive. By integrating LLMs and cutting-edge web technologies, I aim to build software that feels like the future.
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+              <p className="text-base sm:text-lg md:text-xl leading-relaxed text-zinc-300 font-medium mb-6 relative z-10 wrap-break-word">
+                I&apos;m <span className="text-white">Ankita Sah</span>, a Full Stack Developer and Generative AI enthusiast currently pursuing my MDC at Surya Sen Mahavidyalaya.
               </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 relative z-10 border-t border-white/10 pt-8">
+              <p className="text-sm sm:text-base text-zinc-500 leading-relaxed mb-8 relative z-10 wrap-break-word">
+                My journey bridges the gap between intricate backend logic and stunning, fluid user interfaces. I believe the best products don&apos;t just function—they feel alive. By integrating LLMs and cutting-edge web technologies, I aim to build software that feels like the future.
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 relative z-10 border-t border-white/10 pt-8">
                 {[
                   { label: "Status", value: PERSONAL_INFO.openToWork ? "Available" : "Busy" },
                   { label: "Focus", value: "Full Stack + AI" },
                   { label: "Location", value: "Siliguri, WB" },
                   { label: "Course", value: "MDC · 2nd Yr" },
-                ].map(({ label, value }, idx) => (
-                  <div key={label} className="flex flex-col gap-1">
-                    <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider">{label}</span>
-                    <span className="text-sm font-semibold text-zinc-200">{value}</span>
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex flex-col gap-1 min-w-0">
+                    <span className="text-[10px] sm:text-xs font-mono text-zinc-500 uppercase tracking-wider truncate">{label}</span>
+                    <span className="text-sm font-semibold text-zinc-200 wrap-break-word">{value}</span>
                   </div>
                 ))}
               </div>

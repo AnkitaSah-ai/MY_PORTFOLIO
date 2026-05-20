@@ -79,20 +79,20 @@ export default function Skills() {
             <motion.div
               key={card.title}
               {...fadeUp(0.1 + idx * 0.05)}
-              className={`group glass-panel rounded-3xl p-6 sm:p-8 border border-white/5 transition-all duration-500 relative overflow-hidden flex flex-col justify-between min-h-[160px] ${card.className} ${card.border}`}
+              className={`group glass-panel rounded-3xl p-6 sm:p-8 border border-white/5 transition-all duration-500 relative overflow-hidden flex flex-col gap-6 min-h-50 ${card.className} ${card.border}`}
             >
               {/* Animated Gradient Background */}
               <div className={`absolute inset-0 bg-gradient-to-br ${card.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`} />
-              
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-6 relative z-10">
+
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white relative z-10 pb-1">
                 {card.title}
               </h3>
-              
-              <div className="flex flex-wrap gap-2 sm:gap-3 relative z-10 mt-auto">
+
+              <div className="flex flex-wrap gap-2 relative z-10 mt-auto">
                 {card.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/5 border border-white/10 text-zinc-300 group-hover:bg-white/10 group-hover:border-white/20 transition-colors"
+                    className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/5 border border-white/10 text-zinc-300 group-hover:bg-white/10 group-hover:border-white/20 transition-colors whitespace-nowrap"
                   >
                     {skill}
                   </span>

@@ -65,18 +65,21 @@ export default function Testimonials() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
-                className="glass-panel p-8 sm:p-10 rounded-3xl border border-white/5 relative group hover:border-cyan-500/30 transition-colors duration-500"
+                className="glass-panel p-8 sm:p-10 rounded-3xl border border-white/5 relative group hover:border-cyan-500/30 transition-colors duration-500 flex flex-col overflow-hidden"
               >
-                <div className="absolute top-8 right-8 text-6xl text-white/5 font-serif leading-none group-hover:text-cyan-500/10 transition-colors duration-500">
-                  "
+                <div
+                  className="absolute -top-4 right-4 sm:right-6 text-8xl text-white/5 font-serif leading-none group-hover:text-cyan-500/10 transition-colors duration-500 pointer-events-none select-none"
+                  aria-hidden="true"
+                >
+                  &ldquo;
                 </div>
-                
-                <p className="text-lg sm:text-xl text-zinc-300 leading-relaxed mb-8 relative z-10 font-medium">
+
+                <p className="text-base sm:text-lg text-zinc-300 leading-relaxed mb-8 relative z-10 font-medium">
                   {testimonial.text}
                 </p>
-                
+
                 <div className="flex items-center gap-4 relative z-10 mt-auto pt-6 border-t border-white/5">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center text-zinc-400 font-bold border border-white/10">
+                  <div className="w-12 h-12 shrink-0 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center text-zinc-400 font-bold border border-white/10">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
