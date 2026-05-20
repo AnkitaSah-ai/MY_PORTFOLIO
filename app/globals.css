@@ -153,7 +153,69 @@ body:has(button:hover) #cursor-ring {
   from { filter: hue-rotate(0deg); }
   to   { filter: hue-rotate(360deg); }
 }
-
 .hue-rotate-anim {
   animation: hue-spin 5s linear infinite;
+}
+
+/* ── Gradient border slide animation (project cards) ── */
+@keyframes border-slide {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+.gradient-border-anim {
+  animation: border-slide 3s linear infinite;
+}
+
+/* ── Skeleton shimmer ── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(42,37,74,0.4)   0%,
+    rgba(124,110,230,0.2) 40%,
+    rgba(42,37,74,0.4)   80%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite linear;
+}
+
+/* ── Glitch title ── */
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(0 0 98% 0); transform: translate(-2px, 0); }
+  20%       { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); }
+  40%       { clip-path: inset(70% 0 10% 0); transform: translate(-1px, 0); }
+  60%       { clip-path: inset(10% 0 80% 0); transform: translate(1px, 0); }
+  80%       { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 0); }
+}
+@keyframes glitch-2 {
+  0%, 100% { clip-path: inset(98% 0 0 0); transform: translate(2px, 0); }
+  20%       { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 0); }
+  40%       { clip-path: inset(10% 0 70% 0); transform: translate(1px, 0); }
+  60%       { clip-path: inset(80% 0 10% 0); transform: translate(-1px, 0); }
+  80%       { clip-path: inset(20% 0 60% 0); transform: translate(2px, 0); }
+}
+
+.glitch-title {
+  position: relative;
+}
+.glitch-title::before,
+.glitch-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.glitch-title::before {
+  color: #06b6d4;
+  animation: glitch-1 4s infinite step-start;
+  opacity: 0.7;
+}
+.glitch-title::after {
+  color: #ec4899;
+  animation: glitch-2 4s infinite step-start;
+  opacity: 0.7;
 }
