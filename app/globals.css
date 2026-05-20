@@ -24,7 +24,8 @@
 @theme inline {
   --color-background: var(--bg-primary);
   --color-foreground: var(--text-primary);
-  --font-mono: "monospace";
+  --font-sans: var(--font-syne);
+  --font-mono: var(--font-space-mono);
 }
 
 /* ── Base reset ── */
@@ -44,11 +45,19 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-syne), "Inter", -apple-system, sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
-  /* hide default cursor when custom cursor is active */
   cursor: none;
+}
+
+/* Headings use Syne, mono labels use Space Mono */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-syne), sans-serif;
+}
+
+.font-mono, code, pre {
+  font-family: var(--font-space-mono), monospace;
 }
 
 /* ── Scroll progress bar ── */
