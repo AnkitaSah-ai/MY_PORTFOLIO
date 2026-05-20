@@ -16,7 +16,7 @@ const PROJECTS: Project[] = [
       "A full-stack CRUD application for managing data with a clean UI, REST API backend, and MongoDB database. Solves real-world data management problems.",
     tech: ["React", "Node.js", "Express", "MongoDB"],
     github: "https://github.com/AnkitaSah-ai",
-    live: "",
+    live: "https://react-to-doo.netlify.app/",
     status: "Completed",
     thumbnail: "/projects/crud.png",
     accentColor: "#7c3aed",
