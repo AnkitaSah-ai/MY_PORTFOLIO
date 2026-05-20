@@ -185,6 +185,10 @@ img, svg, video, canvas {
   50%      { background-position: 100% 50%; }
 }
 
+@keyframes rotate-gradient {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes aurora {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
