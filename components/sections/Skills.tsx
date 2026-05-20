@@ -35,7 +35,7 @@ const SKILL_CATEGORIES = [
   },
 ] as const;
 
-function HexCard({
+function Chip({
   skill,
   color,
   glow,
@@ -47,84 +47,80 @@ function HexCard({
   delay: number;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.7 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.45, delay, ease: "easeOut" }}
-      whileHover={{ y: -6, scale: 1.08 }}
-      className="relative flex items-center justify-center rounded-xl px-4 py-3 cursor-default select-none transition-shadow duration-300"
+    <motion.span
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.4, delay, ease: "easeOut" }}
+      whileHover={{ y: -3 }}
+      className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-mono font-semibold cursor-default select-none transition-all duration-200"
       style={{
         background: "var(--bg-card)",
-        border: `1px solid ${color}40`,
-        minWidth: "90px",
+        border: `1px solid ${color}33`,
+        color,
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = `0 0 20px ${glow}, 0 0 40px ${glow}55`;
-        (e.currentTarget as HTMLElement).style.borderColor = color;
+        (e.currentTarget as HTMLElement).style.boxShadow = `0 6px 20px -8px ${glow}`;
+        (e.currentTarget as HTMLElement).style.borderColor = `${color}99`;
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLElement).style.boxShadow = "none";
-        (e.currentTarget as HTMLElement).style.borderColor = `${color}40`;
+        (e.currentTarget as HTMLElement).style.borderColor = `${color}33`;
       }}
     >
-      <span className="text-xs font-mono font-semibold text-center leading-tight" style={{ color }}>
-        {skill}
-      </span>
-    </motion.div>
+      {skill}
+    </motion.span>
   );
 }
 
 export default function Skills() {
   return (
     <section id="skills" className="section-padding" style={{ background: "var(--bg-secondary)" }}>
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="max-w-5xl mx-auto">
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="font-mono text-xs tracking-widest uppercase mb-2 text-center"
+          transition={{ duration: 0.5 }}
+          className="font-mono text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-2 text-center"
           style={{ color: "var(--accent-cyan)" }}
         >
           What I work with
         </motion.p>
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.08 }}
-          className="text-3xl md:text-4xl font-bold text-center mb-14"
+          transition={{ duration: 0.5, delay: 0.08 }}
+          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-14"
           style={{ color: "var(--text-primary)" }}
         >
           Skills
         </motion.h2>
 
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-8 sm:gap-10">
           {SKILL_CATEGORIES.map((cat, ci) => (
             <div key={cat.label}>
-              {/* Category label */}
               <motion.p
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -12 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: ci * 0.06 }}
-                className="font-mono text-xs tracking-widest uppercase mb-4"
+                transition={{ duration: 0.4, delay: ci * 0.05 }}
+                className="font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-3 sm:mb-4"
                 style={{ color: cat.color }}
               >
-                {cat.label}
+                — {cat.label}
               </motion.p>
 
-              {/* Skill chips */}
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {cat.skills.map((skill, si) => (
-                  <HexCard
+                  <Chip
                     key={skill}
                     skill={skill}
                     color={cat.color}
                     glow={cat.glow}
-                    delay={ci * 0.04 + si * 0.06}
+                    delay={ci * 0.03 + si * 0.04}
                   />
                 ))}
               </div>

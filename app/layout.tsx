@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Syne, Space_Mono } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
 import Navbar from "@/components/ui/Navbar";
-import PageLoader from "@/components/ui/PageLoader";
 
 const syne = Syne({
   subsets: ["latin"],
@@ -19,6 +17,13 @@ const spaceMono = Space_Mono({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#07070f",
+};
+
 export const metadata: Metadata = {
   title: "Ankita Sah | Full Stack & GenAI Developer",
   description:
@@ -30,7 +35,6 @@ export const metadata: Metadata = {
     "GenAI",
     "Next.js",
     "React",
-    "LangChain",
     "Siliguri",
   ],
   authors: [{ name: "Ankita Sah" }],
@@ -41,13 +45,11 @@ export const metadata: Metadata = {
       "2nd year student at Surya Sen Mahavidyalaya, Siliguri — building the future with code and AI.",
     type: "website",
     url: "https://ankitasah.vercel.app",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Ankita Sah Portfolio" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Ankita Sah | Full Stack & GenAI Developer",
     description: "Portfolio — Full Stack & GenAI Developer from Siliguri.",
-    images: ["/og-image.png"],
   },
 };
 
@@ -57,9 +59,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${syne.variable} ${spaceMono.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
-        <PageLoader />
         <ScrollProgressBar />
-        <CustomCursor />
         <Navbar />
         {children}
       </body>

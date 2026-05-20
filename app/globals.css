@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  /* Core palette */
   --bg-primary: #07070f;
   --bg-secondary: #0d0c22;
   --bg-card: #0f0e1a;
@@ -17,8 +16,6 @@
   --text-muted: #5a536e;
 
   --border-subtle: #2a254a;
-  --glow-purple: 0 0 20px rgba(124, 58, 237, 0.4);
-  --glow-cyan: 0 0 20px rgba(6, 182, 212, 0.4);
 }
 
 @theme inline {
@@ -28,10 +25,7 @@
   --font-mono: var(--font-space-mono);
 }
 
-/* ── Base reset ── */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -40,6 +34,7 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -48,16 +43,23 @@ body {
   font-family: var(--font-syne), "Inter", -apple-system, sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
-  cursor: none;
+  width: 100%;
+  min-height: 100vh;
 }
 
-/* Headings use Syne, mono labels use Space Mono */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-syne), sans-serif;
+  line-height: 1.15;
 }
 
 .font-mono, code, pre {
   font-family: var(--font-space-mono), monospace;
+}
+
+img, svg, video, canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* ── Scroll progress bar ── */
@@ -65,45 +67,11 @@ h1, h2, h3, h4, h5, h6 {
   position: fixed;
   top: 0;
   left: 0;
-  height: 3px;
+  height: 2px;
   width: 0%;
   background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
-  z-index: 9999;
-  transition: width 0.1s linear;
-  box-shadow: 0 0 8px var(--accent-purple);
-}
-
-/* ── Custom cursor ── */
-#cursor-dot {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  background: var(--accent-cyan);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: background 0.2s, transform 0.1s;
-  box-shadow: 0 0 12px var(--accent-cyan);
-}
-
-#cursor-ring {
-  position: fixed;
-  width: 32px;
-  height: 32px;
-  border: 1.5px solid rgba(124, 58, 237, 0.6);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9997;
-  transform: translate(-50%, -50%);
-  transition: transform 0.12s ease, width 0.2s, height 0.2s, border-color 0.2s;
-}
-
-body:has(a:hover) #cursor-ring,
-body:has(button:hover) #cursor-ring {
-  width: 48px;
-  height: 48px;
-  border-color: var(--accent-cyan);
+  z-index: 100;
+  transition: width 0.15s ease-out;
 }
 
 /* ── Selection ── */
@@ -120,111 +88,64 @@ body:has(button:hover) #cursor-ring {
   background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-purple);
+  background: rgba(124, 58, 237, 0.5);
   border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-purple);
 }
 
 /* ── Utility classes ── */
-.text-gradient-purple {
+.text-gradient {
   background: linear-gradient(135deg, var(--accent-purple-light), var(--accent-cyan));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.glow-purple {
-  box-shadow: var(--glow-purple);
-}
-
-.glow-cyan {
-  box-shadow: var(--glow-cyan);
-}
-
 .glass {
-  background: rgba(13, 12, 34, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle);
+  background: rgba(15, 14, 26, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(124, 58, 237, 0.18);
 }
 
 .section-padding {
-  padding: 6rem 1.5rem;
+  padding: 4.5rem 1.25rem;
 }
 
-@media (min-width: 768px) {
-  .section-padding {
-    padding: 8rem 2rem;
+@media (min-width: 640px) {
+  .section-padding { padding: 5.5rem 1.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .section-padding { padding: 7rem 2rem; }
+}
+
+/* ── Soft profile ring glow (gentle pulse, no rotation) ── */
+@keyframes soft-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.04); }
+}
+.soft-pulse {
+  animation: soft-pulse 4s ease-in-out infinite;
+}
+
+/* ── Subtle floating ── */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.float-y {
+  animation: float-y 4s ease-in-out infinite;
+}
+
+/* ── Respect reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-}
-
-/* ── Hue-rotate animation for profile glow ring ── */
-@keyframes hue-spin {
-  from { filter: hue-rotate(0deg); }
-  to   { filter: hue-rotate(360deg); }
-}
-.hue-rotate-anim {
-  animation: hue-spin 5s linear infinite;
-}
-
-/* ── Gradient border slide animation (project cards) ── */
-@keyframes border-slide {
-  0%   { background-position: 0%   50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0%   50%; }
-}
-.gradient-border-anim {
-  animation: border-slide 3s linear infinite;
-}
-
-/* ── Skeleton shimmer ── */
-@keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position:  400px 0; }
-}
-.skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(42,37,74,0.4)   0%,
-    rgba(124,110,230,0.2) 40%,
-    rgba(42,37,74,0.4)   80%
-  );
-  background-size: 800px 100%;
-  animation: shimmer 1.6s infinite linear;
-}
-
-/* ── Glitch title ── */
-@keyframes glitch-1 {
-  0%, 100% { clip-path: inset(0 0 98% 0); transform: translate(-2px, 0); }
-  20%       { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); }
-  40%       { clip-path: inset(70% 0 10% 0); transform: translate(-1px, 0); }
-  60%       { clip-path: inset(10% 0 80% 0); transform: translate(1px, 0); }
-  80%       { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 0); }
-}
-@keyframes glitch-2 {
-  0%, 100% { clip-path: inset(98% 0 0 0); transform: translate(2px, 0); }
-  20%       { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 0); }
-  40%       { clip-path: inset(10% 0 70% 0); transform: translate(1px, 0); }
-  60%       { clip-path: inset(80% 0 10% 0); transform: translate(-1px, 0); }
-  80%       { clip-path: inset(20% 0 60% 0); transform: translate(2px, 0); }
-}
-
-.glitch-title {
-  position: relative;
-}
-.glitch-title::before,
-.glitch-title::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.glitch-title::before {
-  color: #06b6d4;
-  animation: glitch-1 4s infinite step-start;
-  opacity: 0.7;
-}
-.glitch-title::after {
-  color: #ec4899;
-  animation: glitch-2 4s infinite step-start;
-  opacity: 0.7;
 }
