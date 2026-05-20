@@ -3,124 +3,87 @@
 import { motion } from "framer-motion";
 import { PERSONAL_INFO } from "@/data/constants";
 
-const vp = { once: true, margin: "-80px" as const };
-const iv = { opacity: 0, y: 24 };
-const av = (delay: number) => ({
-  opacity: 1,
-  y: 0,
-  transition: { duration: 0.6, delay, ease: [0.21, 0.47, 0.32, 0.98] as [number, number, number, number] },
+const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-100px" as const },
+  transition: { duration: 0.8, delay, ease: EASE },
 });
 
 export default function About() {
   return (
-    <section id="about" className="section-padding">
-      <div className="max-w-5xl mx-auto">
-
-        <motion.p
-          initial={iv} whileInView={av(0)} viewport={vp}
-          className="font-mono text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-2 text-center"
-          style={{ color: "var(--accent-purple-light)" }}
-        >
-          Get to know me
-        </motion.p>
-        <motion.h2
-          initial={iv} whileInView={av(0.08)} viewport={vp}
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-14"
-          style={{ color: "var(--text-primary)" }}
-        >
-          About Me
-        </motion.h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8 md:gap-12 items-center">
-
-          {/* Profile photo with subtle gradient ring */}
-          <motion.div
-            initial={iv} whileInView={av(0.15)} viewport={vp}
-            className="flex justify-center md:justify-start"
-          >
-            <div className="relative w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 float-y">
-              {/* Soft glow */}
-              <div
-                className="absolute -inset-2 rounded-full blur-2xl soft-pulse"
-                style={{
-                  background:
-                    "conic-gradient(from 0deg, rgba(124,58,237,0.5), rgba(6,182,212,0.5), rgba(236,72,153,0.5), rgba(124,58,237,0.5))",
-                }}
-              />
-              {/* Static gradient ring */}
-              <div
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background:
-                    "conic-gradient(from 220deg, #7c3aed, #06b6d4, #ec4899, #7c3aed)",
-                  padding: "2px",
-                }}
-              >
-                <div className="w-full h-full rounded-full" style={{ background: "var(--bg-primary)" }} />
-              </div>
-              {/* Avatar */}
-              <div
-                className="absolute inset-1 rounded-full flex items-center justify-center overflow-hidden"
-                style={{ background: "var(--bg-secondary)" }}
-              >
-                <span className="text-6xl sm:text-7xl select-none" role="img" aria-label="Avatar">
-                  👩‍💻
+    <section id="about" className="section-padding relative overflow-hidden">
+      {/* Background accents */}
+      <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-purple-900/20 blur-[120px] rounded-full pointer-events-none -translate-y-1/2" />
+      
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+          
+          {/* Header & Title - Left side on Desktop */}
+          <div className="lg:col-span-5 flex flex-col gap-6 sticky top-32">
+            <motion.div {...fadeUp(0)}>
+              <div className="inline-flex items-center gap-3">
+                <div className="h-[1px] w-8 bg-purple-500" />
+                <span className="font-mono text-xs tracking-[0.2em] uppercase text-zinc-400">
+                  The Architect
                 </span>
               </div>
-            </div>
-          </motion.div>
-
-          {/* Bio card */}
-          <motion.div
-            initial={iv} whileInView={av(0.25)} viewport={vp}
-            className="glass rounded-2xl p-6 sm:p-8 flex flex-col gap-4 sm:gap-5"
-          >
-            <span
-              className="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono tracking-wide"
-              style={{
-                background: "rgba(52,211,153,0.1)",
-                border: "1px solid rgba(52,211,153,0.3)",
-                color: "var(--accent-green)",
-              }}
+            </motion.div>
+            
+            <motion.h2 
+              {...fadeUp(0.1)}
+              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight"
             >
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                  style={{ background: "var(--accent-green)" }} />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5"
-                  style={{ background: "var(--accent-green)" }} />
-              </span>
-              Open to Work
-            </span>
+              Crafting digital <br />
+              <span className="text-gradient-accent">experiences.</span>
+            </motion.h2>
 
-            <p className="text-sm sm:text-base leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              I&apos;m{" "}
-              <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>Ankita Sah</span>, a passionate
-              2nd year MDC student at{" "}
-              <span style={{ color: "var(--accent-purple-light)" }}>
-                Surya Sen Mahavidyalaya, Siliguri
-              </span>
-              . I love building Full Stack apps and exploring GenAI to solve real-world problems.
-            </p>
+            <motion.div 
+              {...fadeUp(0.2)}
+              className="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center mt-4 glass-panel"
+            >
+              <div className="w-16 h-16 rounded-full overflow-hidden bg-zinc-900">
+                <img 
+                  src="/images/profile.jpg" 
+                  alt="Ankita Sah" 
+                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop";
+                  }}
+                />
+              </div>
+            </motion.div>
+          </div>
 
-            <p className="text-xs sm:text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              When I&apos;m not coding, I&apos;m experimenting with LLMs, reading about AI research, or
-              designing interfaces that feel like the future.
-            </p>
+          {/* Bio Content - Right side on Desktop */}
+          <div className="lg:col-span-7 flex flex-col gap-8 lg:mt-24">
+            <motion.div {...fadeUp(0.3)} className="glass-panel p-8 sm:p-10 rounded-3xl border border-white/5 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <p className="text-lg sm:text-xl md:text-2xl leading-relaxed text-zinc-300 font-medium mb-6 relative z-10">
+                I'm <span className="text-white">Ankita Sah</span>, a Full Stack Developer and Generative AI enthusiast currently pursuing my MDC at Surya Sen Mahavidyalaya.
+              </p>
+              
+              <p className="text-base sm:text-lg text-zinc-500 leading-relaxed mb-8 relative z-10">
+                My journey bridges the gap between intricate backend logic and stunning, fluid user interfaces. I believe the best products don't just function—they feel alive. By integrating LLMs and cutting-edge web technologies, I aim to build software that feels like the future.
+              </p>
 
-            <div className="grid grid-cols-2 gap-3 mt-1">
-              {[
-                { label: "Location", value: "Siliguri, WB" },
-                { label: "Course", value: "MDC · 2nd Year" },
-                { label: "Focus", value: "Full Stack + AI" },
-                { label: "Status", value: PERSONAL_INFO.openToWork ? "Available" : "Busy" },
-              ].map(({ label, value }) => (
-                <div key={label}>
-                  <p className="text-[10px] sm:text-xs font-mono" style={{ color: "var(--text-muted)" }}>{label}</p>
-                  <p className="text-xs sm:text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{value}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 relative z-10 border-t border-white/10 pt-8">
+                {[
+                  { label: "Status", value: PERSONAL_INFO.openToWork ? "Available" : "Busy" },
+                  { label: "Focus", value: "Full Stack + AI" },
+                  { label: "Location", value: "Siliguri, WB" },
+                  { label: "Course", value: "MDC · 2nd Yr" },
+                ].map(({ label, value }, idx) => (
+                  <div key={label} className="flex flex-col gap-1">
+                    <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider">{label}</span>
+                    <span className="text-sm font-semibold text-zinc-200">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Syne, Space_Mono } from "next/font/google";
+import { Outfit, Space_Mono } from "next/font/google";
 import "./globals.css";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
 import Navbar from "@/components/ui/Navbar";
 
-const syne = Syne({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-syne",
+  variable: "--font-outfit",
   display: "swap",
 });
 
@@ -57,8 +57,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${spaceMono.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased">
+    <html lang="en" className={`${outfit.variable} ${spaceMono.variable} h-full`} suppressHydrationWarning>
+      <body className="min-h-full flex flex-col antialiased" suppressHydrationWarning>
         <ScrollProgressBar />
         <Navbar />
         {children}

@@ -1,130 +1,104 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { SKILLS } from "@/data/constants";
 
-const SKILL_CATEGORIES = [
-  {
-    label: "Frontend",
-    color: "#7c3aed",
-    glow: "rgba(124,58,237,0.45)",
-    skills: ["React.js", "Next.js", "TypeScript", "Tailwind CSS", "HTML5", "CSS3"],
-  },
-  {
-    label: "Backend",
-    color: "#06b6d4",
-    glow: "rgba(6,182,212,0.45)",
-    skills: ["Node.js", "Express.js", "Python", "FastAPI", "REST APIs"],
-  },
-  {
-    label: "Database",
-    color: "#34d399",
-    glow: "rgba(52,211,153,0.45)",
-    skills: ["MongoDB", "PostgreSQL", "Firebase", "SQL"],
-  },
-  {
-    label: "GenAI",
-    color: "#f472b6",
-    glow: "rgba(244,114,182,0.45)",
-    skills: ["LangChain", "OpenAI API", "Gemini API", "Hugging Face", "Prompt Eng."],
-  },
-  {
-    label: "Tools",
-    color: "#fb923c",
-    glow: "rgba(251,146,60,0.45)",
-    skills: ["Git", "GitHub", "VS Code", "Postman", "Figma", "Vercel"],
-  },
-] as const;
+const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-100px" as const },
+  transition: { duration: 0.8, delay, ease: EASE },
+});
 
-function Chip({
-  skill,
-  color,
-  glow,
-  delay,
-}: {
-  skill: string;
-  color: string;
-  glow: string;
-  delay: number;
-}) {
-  return (
-    <motion.span
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.4, delay, ease: "easeOut" }}
-      whileHover={{ y: -3 }}
-      className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-mono font-semibold cursor-default select-none transition-all duration-200"
-      style={{
-        background: "var(--bg-card)",
-        border: `1px solid ${color}33`,
-        color,
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = `0 6px 20px -8px ${glow}`;
-        (e.currentTarget as HTMLElement).style.borderColor = `${color}99`;
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.boxShadow = "none";
-        (e.currentTarget as HTMLElement).style.borderColor = `${color}33`;
-      }}
-    >
-      {skill}
-    </motion.span>
-  );
-}
+const bentoCards = [
+  {
+    title: "Frontend Development",
+    skills: SKILLS.frontend,
+    className: "md:col-span-2",
+    accent: "from-purple-500/20 to-cyan-500/20",
+    border: "group-hover:border-purple-500/50",
+  },
+  {
+    title: "Backend Engineering",
+    skills: SKILLS.backend,
+    className: "md:col-span-1",
+    accent: "from-emerald-500/20 to-teal-500/20",
+    border: "group-hover:border-emerald-500/50",
+  },
+  {
+    title: "Languages",
+    skills: SKILLS.languages,
+    className: "md:col-span-1",
+    accent: "from-pink-500/20 to-rose-500/20",
+    border: "group-hover:border-pink-500/50",
+  },
+  {
+    title: "Generative AI",
+    skills: SKILLS.ai,
+    className: "md:col-span-2",
+    accent: "from-cyan-500/20 to-blue-500/20",
+    border: "group-hover:border-cyan-500/50",
+  },
+  {
+    title: "Databases",
+    skills: SKILLS.databases,
+    className: "md:col-span-1",
+    accent: "from-orange-500/20 to-amber-500/20",
+    border: "group-hover:border-orange-500/50",
+  },
+  {
+    title: "Tools & DevOps",
+    skills: SKILLS.tools,
+    className: "md:col-span-2",
+    accent: "from-indigo-500/20 to-purple-500/20",
+    border: "group-hover:border-indigo-500/50",
+  },
+];
 
 export default function Skills() {
   return (
-    <section id="skills" className="section-padding" style={{ background: "var(--bg-secondary)" }}>
-      <div className="max-w-5xl mx-auto">
+    <section id="skills" className="section-padding relative">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col items-center text-center mb-16 sm:mb-24">
+          <motion.div {...fadeUp(0)}>
+            <span className="font-mono text-xs tracking-[0.2em] uppercase text-zinc-400 mb-4 block">
+              Arsenal
+            </span>
+          </motion.div>
+          <motion.h2 
+            {...fadeUp(0.1)}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold"
+          >
+            Technologies I <span className="text-gradient-accent">command.</span>
+          </motion.h2>
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="font-mono text-[10px] sm:text-xs tracking-[0.25em] uppercase mb-2 text-center"
-          style={{ color: "var(--accent-cyan)" }}
-        >
-          What I work with
-        </motion.p>
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.08 }}
-          className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-14"
-          style={{ color: "var(--text-primary)" }}
-        >
-          Skills
-        </motion.h2>
-
-        <div className="flex flex-col gap-8 sm:gap-10">
-          {SKILL_CATEGORIES.map((cat, ci) => (
-            <div key={cat.label}>
-              <motion.p
-                initial={{ opacity: 0, x: -12 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: ci * 0.05 }}
-                className="font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase mb-3 sm:mb-4"
-                style={{ color: cat.color }}
-              >
-                — {cat.label}
-              </motion.p>
-
-              <div className="flex flex-wrap gap-2 sm:gap-3">
-                {cat.skills.map((skill, si) => (
-                  <Chip
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          {bentoCards.map((card, idx) => (
+            <motion.div
+              key={card.title}
+              {...fadeUp(0.1 + idx * 0.05)}
+              className={`group glass-panel rounded-3xl p-6 sm:p-8 border border-white/5 transition-all duration-500 relative overflow-hidden flex flex-col justify-between min-h-[160px] ${card.className} ${card.border}`}
+            >
+              {/* Animated Gradient Background */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${card.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`} />
+              
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-6 relative z-10">
+                {card.title}
+              </h3>
+              
+              <div className="flex flex-wrap gap-2 sm:gap-3 relative z-10 mt-auto">
+                {card.skills.map((skill) => (
+                  <span
                     key={skill}
-                    skill={skill}
-                    color={cat.color}
-                    glow={cat.glow}
-                    delay={ci * 0.03 + si * 0.04}
-                  />
+                    className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/5 border border-white/10 text-zinc-300 group-hover:bg-white/10 group-hover:border-white/20 transition-colors"
+                  >
+                    {skill}
+                  </span>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

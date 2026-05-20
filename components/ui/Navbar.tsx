@@ -2,173 +2,190 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import { NAV_LINKS, PERSONAL_INFO } from "@/data/constants";
+import { cn } from "@/lib/utils";
+import { PERSONAL_INFO } from "@/data/constants";
 
-function useActiveSection() {
-  const [active, setActive] = useState("");
-
-  useEffect(() => {
-    const ids = NAV_LINKS.map((l) => l.href.replace("#", ""));
-    const observers = ids.map((id) => {
-      const el = document.getElementById(id);
-      if (!el) return null;
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActive(id); },
-        { rootMargin: "-40% 0px -55% 0px" }
-      );
-      obs.observe(el);
-      return obs;
-    });
-    return () => observers.forEach((o) => o?.disconnect());
-  }, []);
-
-  return active;
-}
+const links = [
+  { name: "Home", href: "#hero", id: "hero" },
+  { name: "About", href: "#about", id: "about" },
+  { name: "Skills", href: "#skills", id: "skills" },
+  { name: "Experience", href: "#experience", id: "experience" },
+  { name: "Projects", href: "#projects", id: "projects" },
+  { name: "Testimonials", href: "#testimonials", id: "testimonials" },
+  { name: "Contact", href: "#contact", id: "contact" },
+];
 
 export default function Navbar() {
+  const [active, setActive] = useState("hero");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const active = useActiveSection();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+
+      const scrollPos = window.scrollY + window.innerHeight / 3;
+      for (let i = links.length - 1; i >= 0; i--) {
+        const el = document.getElementById(links[i].id);
+        if (el && el.offsetTop <= scrollPos) {
+          setActive(links[i].id);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on resize to desktop
   useEffect(() => {
     const onResize = () => { if (window.innerWidth >= 768) setMenuOpen(false); };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const closeMenu = () => setMenuOpen(false);
-
   return (
     <>
-      <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        style={{
-          background: scrolled ? "rgba(7,7,15,0.85)" : "transparent",
-          backdropFilter: scrolled ? "blur(16px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(16px)" : "none",
-          borderBottom: scrolled ? "1px solid rgba(124,58,237,0.15)" : "1px solid transparent",
-        }}
+      {/* Top wrapper — gives padding from edge */}
+      <motion.div
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-4 sm:pt-5"
       >
-        <nav className="max-w-6xl mx-auto px-5 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
-          {/* Logo */}
-          <a
-            href="#hero"
-            className="font-mono text-xs sm:text-sm font-bold tracking-widest"
-            style={{ color: "var(--accent-purple-light)" }}
-          >
-            ANKITA<span style={{ color: "var(--accent-cyan)" }}>.DEV</span>
-          </a>
+        <header
+          className={cn(
+            "max-w-6xl mx-auto rounded-full transition-all duration-500",
+            scrolled
+              ? "bg-black/60 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+              : "bg-black/30 backdrop-blur-md border border-white/5"
+          )}
+        >
+          <nav className="px-4 sm:px-5 h-12 sm:h-14 flex items-center justify-between gap-4">
+            {/* Logo */}
+            <a
+              href="#hero"
+              className="flex items-center gap-2.5 group shrink-0"
+              aria-label="Home"
+            >
+              <span className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold text-white overflow-hidden">
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-500 via-fuchsia-500 to-cyan-400" />
+                <span className="absolute inset-0 bg-gradient-to-br from-purple-500 via-fuchsia-500 to-cyan-400 opacity-0 group-hover:opacity-100 blur-md transition-opacity" />
+                <span className="relative z-10">A</span>
+              </span>
+              <span className="hidden sm:block font-bold text-sm tracking-tight text-white">
+                Ankita<span className="text-zinc-500">.dev</span>
+              </span>
+            </a>
 
-          {/* Desktop links */}
-          <ul className="hidden md:flex items-center gap-6 lg:gap-8">
-            {NAV_LINKS.map(({ label, href }) => {
-              const id = href.replace("#", "");
-              const isActive = active === id;
-              return (
-                <li key={href}>
-                  <a
-                    href={href}
-                    className="relative font-mono text-[11px] tracking-[0.2em] uppercase transition-colors duration-200 hover:text-white"
-                    style={{ color: isActive ? "var(--accent-purple-light)" : "var(--text-muted)" }}
-                  >
-                    {label}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-underline"
-                        className="absolute -bottom-1.5 left-0 right-0 h-px"
-                        style={{ background: "var(--accent-purple)" }}
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
-                    )}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-1 relative">
+              {links.map((link) => (
+                <a
+                  key={link.id}
+                  href={link.href}
+                  className={cn(
+                    "relative px-3 lg:px-3.5 py-1.5 text-xs lg:text-[13px] font-medium transition-colors duration-300 rounded-full",
+                    active === link.id ? "text-white" : "text-zinc-500 hover:text-white"
+                  )}
+                >
+                  {active === link.id && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      className="absolute inset-0 rounded-full bg-white/10 border border-white/10"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative z-10">{link.name}</span>
+                </a>
+              ))}
+            </div>
 
-          {/* Resume CTA — desktop */}
-          <a
-            href={PERSONAL_INFO.resume}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-mono text-[11px] tracking-wide transition-all duration-200 hover:bg-purple-500/15"
-            style={{
-              border: "1px solid rgba(124,58,237,0.4)",
-              color: "var(--accent-purple-light)",
-            }}
-          >
-            Resume ↗
-          </a>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label="Toggle menu"
-            aria-expanded={menuOpen}
-            className="md:hidden p-2 -mr-2 rounded-lg"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </nav>
-      </header>
-
-      {/* Mobile slide-down menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="fixed top-14 sm:top-16 left-0 right-0 z-40 flex flex-col py-3 md:hidden"
-            style={{
-              background: "rgba(7,7,15,0.97)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              borderBottom: "1px solid rgba(124,58,237,0.2)",
-            }}
-          >
-            {NAV_LINKS.map(({ label, href }, i) => (
-              <motion.a
-                key={href}
-                href={href}
-                onClick={closeMenu}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.04 }}
-                className="px-6 py-3 font-mono text-xs tracking-[0.2em] uppercase"
-                style={{
-                  color: active === href.replace("#", "")
-                    ? "var(--accent-purple-light)"
-                    : "var(--text-secondary)",
-                }}
-              >
-                {label}
-              </motion.a>
-            ))}
+            {/* Resume CTA */}
             <a
               href={PERSONAL_INFO.resume}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={closeMenu}
-              className="mx-6 mt-2 py-2.5 rounded-lg text-center font-mono text-[11px]"
-              style={{
-                border: "1px solid rgba(124,58,237,0.4)",
-                color: "var(--accent-purple-light)",
-              }}
+              className="hidden md:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-black bg-white hover:bg-zinc-200 transition-all duration-300 shrink-0"
             >
-              Download Resume ↗
+              Resume
+              <span aria-hidden="true">↗</span>
             </a>
+
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden relative w-9 h-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+            >
+              <div className="w-4 h-3 flex flex-col justify-between items-center">
+                <span
+                  className={cn(
+                    "w-full h-[1.5px] bg-white transition-all duration-300 origin-center",
+                    menuOpen && "rotate-45 translate-y-[5px]"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "w-full h-[1.5px] bg-white transition-all duration-300",
+                    menuOpen && "opacity-0"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "w-full h-[1.5px] bg-white transition-all duration-300 origin-center",
+                    menuOpen && "-rotate-45 -translate-y-[5px]"
+                  )}
+                />
+              </div>
+            </button>
+          </nav>
+        </header>
+      </motion.div>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="fixed top-[68px] left-4 right-4 z-50 md:hidden rounded-2xl overflow-hidden bg-black/85 backdrop-blur-xl border border-white/10 shadow-2xl"
+          >
+            <nav className="flex flex-col py-2">
+              {links.map((link, i) => (
+                <motion.a
+                  key={link.id}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  className={cn(
+                    "px-5 py-3 text-sm font-medium transition-colors",
+                    active === link.id
+                      ? "text-white bg-white/5"
+                      : "text-zinc-400 hover:text-white hover:bg-white/5"
+                  )}
+                >
+                  {link.name}
+                </motion.a>
+              ))}
+              <div className="px-4 pb-4 pt-2">
+                <a
+                  href={PERSONAL_INFO.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className="block w-full text-center py-2.5 rounded-full text-sm font-semibold text-black bg-white"
+                >
+                  Resume ↗
+                </a>
+              </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>

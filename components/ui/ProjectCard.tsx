@@ -1,160 +1,154 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
+import React, { useRef } from "react";
 import type { Project } from "@/data/projects";
 
 const CHIP_COLORS: Record<string, { bg: string; text: string }> = {
-  React:      { bg: "rgba(6,182,212,0.15)",   text: "#06b6d4" },
-  "Node.js":  { bg: "rgba(52,211,153,0.15)",  text: "#34d399" },
-  Express:    { bg: "rgba(253,186,116,0.15)", text: "#fb923c" },
-  MongoDB:    { bg: "rgba(74,222,128,0.15)",  text: "#4ade80" },
-  Python:     { bg: "rgba(250,204,21,0.15)",  text: "#facc15" },
-  TypeScript: { bg: "rgba(124,58,237,0.15)",  text: "#9d8ff5" },
-  "Next.js":  { bg: "rgba(255,255,255,0.1)",  text: "#e0d7ff" },
+  React:      { bg: "rgba(6,182,212,0.1)",   text: "#22d3ee" },
+  "Node.js":  { bg: "rgba(52,211,153,0.1)",  text: "#34d399" },
+  Express:    { bg: "rgba(253,186,116,0.1)", text: "#fb923c" },
+  MongoDB:    { bg: "rgba(74,222,128,0.1)",  text: "#4ade80" },
+  Python:     { bg: "rgba(250,204,21,0.1)",  text: "#facc15" },
+  TypeScript: { bg: "rgba(168,85,247,0.1)",  text: "#c084fc" },
+  "Next.js":  { bg: "rgba(255,255,255,0.05)",text: "#e4e4e7" },
 };
-const fallbackChip = { bg: "rgba(157,143,245,0.15)", text: "#9d8ff5" };
+const fallbackChip = { bg: "rgba(255,255,255,0.05)", text: "#a1a1aa" };
 const chipStyle = (tech: string) => CHIP_COLORS[tech] ?? fallbackChip;
 
 type Props = { project: Project; index: number };
 
 export default function ProjectCard({ project, index }: Props) {
   const isCompleted = project.status === "Completed";
+  
+  const ref = useRef<HTMLDivElement>(null);
+  
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 20 });
+
+  const rotateX = useMotionTemplate`${mouseYSpring}deg`;
+  const rotateY = useMotionTemplate`${mouseXSpring}deg`;
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    
+    const width = rect.width;
+    const height = rect.height;
+    
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    
+    x.set(xPct * 15); // max 15deg rotation
+    y.set(yPct * -15);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.55, delay: index * 0.12, ease: [0.21, 0.47, 0.32, 0.98] }}
-      whileHover={{ y: -6 }}
-      className="group relative rounded-2xl overflow-hidden flex flex-col h-full transition-shadow duration-300"
-      style={{
-        background: "var(--bg-card)",
-        border: "1px solid rgba(124,58,237,0.2)",
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget;
-        el.style.borderColor = project.accentColor;
-        el.style.boxShadow = `0 16px 40px -16px ${project.accentColor}66, 0 0 0 1px ${project.accentColor}33`;
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget;
-        el.style.borderColor = "rgba(124,58,237,0.2)";
-        el.style.boxShadow = "none";
-      }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="perspective-1000 w-full h-full"
     >
-      {/* Top accent strip */}
-      <div
-        className="h-1 w-full"
+      <motion.div
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         style={{
-          background: `linear-gradient(90deg, ${project.accentColor}, #06b6d4)`,
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
         }}
-      />
-
-      {/* Thumbnail */}
-      <div
-        className="w-full h-36 sm:h-40 flex items-center justify-center relative overflow-hidden"
-        style={{ background: "var(--bg-secondary)" }}
+        className="group relative rounded-3xl flex flex-col h-full bg-zinc-900/50 backdrop-blur-xl border border-white/5 transition-colors duration-500 hover:border-purple-500/30 overflow-hidden"
       >
-        <div
-          className="absolute inset-0 opacity-25 transition-opacity duration-500 group-hover:opacity-50"
+        {/* Animated Glow on Hover */}
+        <div 
+          className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none"
           style={{
-            background: `radial-gradient(circle at 50% 50%, ${project.accentColor}, transparent 70%)`,
+            background: `radial-gradient(circle at center, ${project.accentColor}, transparent 70%)`
           }}
         />
-        <span className="text-4xl sm:text-5xl select-none relative z-10" role="img" aria-label="project">
-          🗂️
-        </span>
-      </div>
 
-      {/* Body */}
-      <div className="flex flex-col flex-1 p-5 sm:p-6 gap-3 sm:gap-4">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="text-sm sm:text-base font-bold leading-tight" style={{ color: "var(--text-primary)" }}>
-            {project.title}
-          </h3>
-          <span
-            className="shrink-0 flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-mono"
+        {/* Thumbnail */}
+        <div className="w-full h-48 relative overflow-hidden bg-zinc-950 flex items-center justify-center">
+          <div 
+            className="absolute inset-0 opacity-20 transition-transform duration-700 group-hover:scale-110"
             style={{
-              background: isCompleted ? "rgba(52,211,153,0.12)" : "rgba(251,146,60,0.12)",
-              border: `1px solid ${isCompleted ? "rgba(52,211,153,0.35)" : "rgba(251,146,60,0.35)"}`,
-              color: isCompleted ? "var(--accent-green)" : "#fb923c",
+              background: `radial-gradient(circle at 50% 50%, ${project.accentColor}, transparent 80%)`,
             }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ background: isCompleted ? "var(--accent-green)" : "#fb923c" }}
-            />
-            {project.status}
+          />
+          <span className="text-6xl relative z-10 transform-gpu transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3" role="img" aria-label="project">
+            {project.thumbnail || "🚀"}
           </span>
         </div>
 
-        <p className="text-xs sm:text-sm leading-relaxed flex-1" style={{ color: "var(--text-secondary)" }}>
-          {project.description}
-        </p>
+        {/* Body */}
+        <div className="flex flex-col flex-1 p-6 sm:p-8 relative z-10">
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-zinc-400 transition-all">
+              {project.title}
+            </h3>
+            <span
+              className={`shrink-0 px-3 py-1 rounded-full text-[10px] font-mono border ${isCompleted ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-orange-500/10 border-orange-500/20 text-orange-400"}`}
+            >
+              {project.status}
+            </span>
+          </div>
 
-        <div className="flex flex-wrap gap-1.5 sm:gap-2">
-          {project.tech.map((t) => {
-            const c = chipStyle(t);
-            return (
-              <span
-                key={t}
-                className="px-2 sm:px-2.5 py-1 rounded-md text-[10px] sm:text-xs font-mono font-medium"
-                style={{ background: c.bg, color: c.text }}
-              >
-                {t}
-              </span>
-            );
-          })}
-        </div>
+          <p className="text-sm text-zinc-400 leading-relaxed flex-1 mb-6">
+            {project.description}
+          </p>
 
-        <div className="flex items-center gap-2 sm:gap-3 pt-1">
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-mono font-semibold transition-all duration-200 hover:bg-purple-500/25"
-            style={{
-              background: "rgba(124,58,237,0.15)",
-              border: "1px solid rgba(124,58,237,0.3)",
-              color: "var(--accent-purple-light)",
-            }}
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.14 3 .4 2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-            Code
-          </a>
+          <div className="flex flex-wrap gap-2 mb-8">
+            {project.tech.map((t) => {
+              const c = chipStyle(t);
+              return (
+                <span
+                  key={t}
+                  className="px-2.5 py-1 rounded-md text-xs font-mono"
+                  style={{ background: c.bg, color: c.text }}
+                >
+                  {t}
+                </span>
+              );
+            })}
+          </div>
 
-          {project.live ? (
+          <div className="flex items-center gap-3">
             <a
-              href={project.live}
+              href={project.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-mono font-semibold transition-all duration-200 hover:bg-cyan-500/25"
-              style={{
-                background: "rgba(6,182,212,0.15)",
-                border: "1px solid rgba(6,182,212,0.3)",
-                color: "var(--accent-cyan)",
-              }}
+              className="inline-flex flex-1 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-white/5 hover:bg-white/10 text-white transition-all border border-white/5"
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-              Live
+              Code
             </a>
-          ) : (
-            <span
-              className="inline-flex items-center px-3 py-2 rounded-lg text-[10px] sm:text-xs font-mono"
-              style={{ color: "var(--text-muted)" }}
-            >
-              No live demo
-            </span>
-          )}
+
+            {project.live && (
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex flex-1 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-purple-500 hover:bg-purple-400 text-white transition-all shadow-[0_0_20px_rgba(168,85,247,0.2)] hover:shadow-[0_0_30px_rgba(168,85,247,0.4)]"
+              >
+                Live Demo
+              </a>
+            )}
+          </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
